@@ -27,7 +27,11 @@ module Fastlane
 
         command << " > #{params[:output_file].shellescape}" if params[:output_file]
 
-        Actions.sh(command)
+        begin
+          Actions.sh(command)
+        rescue
+          handle_swiftlint_error(params[:ignore_exit_status], $?.exitstatus)
+        end
       end
 
       #####################################################
@@ -62,6 +66,12 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :files,
                                        description: 'List of files to process',
                                        is_string: false,
+                                       optional: true),
+          FastlaneCore::ConfigItem.new(key: :ignore_exit_status,
+                                       description: "Ignore the exit status of the swiftlint command, so that serious violations \
+                                                    don't fail the build (true/false)",
+                                       default_value: false,
+                                       is_string: false,
                                        optional: true)
         ]
       end
@@ -78,6 +88,25 @@ module Fastlane
 
       def self.is_supported?(platform)
         [:ios, :mac].include?(platform)
+      end
+
+      def self.handle_swiftlint_error(ignore_exit_status, exit_status)
+        failure_suffix = if ignore_exit_status
+                           'which would normally fail the build.'
+                         else
+                           'which represents a failure.'
+                         end
+        secondary_message = if ignore_exit_status
+                              'We are continuing on because the `ignore_exit_status` option was used! 🙈'
+                            else
+                              'If you want the build to continue despite this failure, use the `ignore_exit_status` option. 🙈'
+                            end
+
+        UI.important("")
+        UI.important("`swiftlint` finished with exit code #{exit_status}, #{failure_suffix}")
+        UI.important(secondary_message)
+        UI.important("")
+        UI.user_error!("`swiftlint` finished with errors (exit code: #{exit_status})") unless ignore_exit_status
       end
     end
   end
