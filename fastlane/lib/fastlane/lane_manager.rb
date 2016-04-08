@@ -108,7 +108,7 @@ module Fastlane
         UI.error "It looks like you don't have any lanes to run just yet. Check out how to get started here: https://github.com/fastlane/fastlane 🚀"
         exit
       end
-      
+
       rows = []
       available.each_with_index do |lane, index|
         rows << [index + 1, lane.last.pretty_name, lane.last.description.first]
