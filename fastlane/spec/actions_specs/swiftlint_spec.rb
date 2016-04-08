@@ -68,7 +68,7 @@ describe Fastlane do
         context "by default" do
           it 'should raise if swiftlint completes with a non-zero exit status' do
             allow(FastlaneCore::UI).to receive(:important)
-            expect(FastlaneCore::UI).to receive(:important).with(/despite this failure/)
+            expect(FastlaneCore::UI).to receive(:important).with(/If you want fastlane to continue anyway/)
             # This is simulating the exception raised if the return code is non-zero
             expect(Fastlane::Actions).to receive(:sh).and_raise("fake error")
             expect(FastlaneCore::UI).to receive(:user_error!).with(/`swiftlint` finished with errors/).and_call_original
@@ -84,7 +84,7 @@ describe Fastlane do
         context "when enabled" do
           it 'should not raise if swiftlint completes with a non-zero exit status' do
             allow(FastlaneCore::UI).to receive(:important)
-            expect(FastlaneCore::UI).to receive(:important).with(/continuing/)
+            expect(FastlaneCore::UI).to receive(:important).with(/fastlane will continue/)
             # This is simulating the exception raised if the return code is non-zero
             expect(Fastlane::Actions).to receive(:sh).and_raise("fake error")
             expect(FastlaneCore::UI).to_not receive(:user_error!)
@@ -98,7 +98,7 @@ describe Fastlane do
         context "when disabled" do
           it 'should raise if swiftlint completes with a non-zero exit status' do
             allow(FastlaneCore::UI).to receive(:important)
-            expect(FastlaneCore::UI).to receive(:important).with(/despite this failure/)
+            expect(FastlaneCore::UI).to receive(:important).with(/If you want fastlane to continue anyway/)
             # This is simulating the exception raised if the return code is non-zero
             expect(Fastlane::Actions).to receive(:sh).and_raise("fake error")
             expect(FastlaneCore::UI).to receive(:user_error!).with(/`swiftlint` finished with errors/).and_call_original

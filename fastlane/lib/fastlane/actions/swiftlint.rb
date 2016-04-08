@@ -93,10 +93,10 @@ module Fastlane
       def self.handle_swiftlint_error(ignore_exit_status, exit_status)
         if ignore_exit_status
           failure_suffix = 'which would normally fail the build.'
-          secondary_message = 'We are continuing on because the `ignore_exit_status` option was used! 🙈'
+          secondary_message = 'fastlane will continue because the `ignore_exit_status` option was used! 🙈'
         else
           failure_suffix = 'which represents a failure.'
-          secondary_message = 'If you want the build to continue despite this failure, use the `ignore_exit_status` option. 🙈'
+          secondary_message = 'If you want fastlane to continue anyway, use the `ignore_exit_status` option. 🙈'
         end
 
         UI.important("")
